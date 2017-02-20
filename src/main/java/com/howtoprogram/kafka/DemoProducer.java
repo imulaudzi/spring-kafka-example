@@ -2,10 +2,7 @@ package com.howtoprogram.kafka;
 
 import com.howtoprogram.kafka.generatedAvro.UserGen;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -20,18 +17,23 @@ import java.util.Map;
 @Configuration
 public class DemoProducer {
 
-    public static void main(String [] args) throws Exception{
+    public static void main(String[] args) {
         Producer<String, GenericRecord> producer = new KafkaProducer<>(producerConfigs());
 
 
-
-        for (int i = 0; i <40; i++) {
+        for (int i = 0; i < 1; i++) {
             UserGen userGen = new UserGen();
-//            userGen.setId(UUID.randomUUID().toString());
-            userGen.setName("Isaac"+i);
+            userGen.setName("Isaac" + i);
             userGen.setSurname("Mulaudzi" + i);
-            producer.send(new ProducerRecord<>("SpringKafkaTopic", userGen));
+            producer.send(new ProducerRecord<>("isaac", userGen), (metadata, exception) -> {
+                if (exception != null) {
+                    exception.printStackTrace();
+                    System.out.println("The offset of the record we just sent is: " + metadata.offset());
+                } else {
+                    System.out.println("The offset of the record we just sent is: " + metadata.offset());
+                }
 
+            });
         }
         producer.close();
     }
