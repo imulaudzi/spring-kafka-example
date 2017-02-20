@@ -1,0 +1,8 @@
+{"namespace":"com.howtoprogram.kafka.generatedAvro",
+ "type": "record",
+ "name": "UserGen",
+ "fields": [
+     {"name": "name", "type": "string"},
+     {"name": "surname",  "type": "string"}
+ ]
+}
